@@ -13,7 +13,9 @@ Write network handler with the following signature:
 The two args are:
 
 - ctx: Netty `ChannelHandlerContext` object
-- ch: `core.async` channel object for reading/writing messages
+- ch: `core.async` channel object for reading/writing messages. The
+  message is a Netty `ByteBuf` object or custom message object decoded
+  with given decoder (not supported yet but this feature is planned)
 
 Use `tcp-server` to start a TCP server with given handler:
 
@@ -54,6 +56,11 @@ foobar
 你好
 你好
 ```
+
+## TODO
+
+- Encoder/Decoder support
+- UDP support
 
 ## License
 
