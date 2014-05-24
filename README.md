@@ -4,7 +4,56 @@ core.async network channels powered by Netty.
 
 ## Usage
 
-TODO
+Write network handler with the following signature:
+
+```clojure
+(defn handler [ctx ch])
+```
+
+The two args are:
+
+- ctx: Netty `ChannelHandlerContext` object
+- ch: `core.async` channel object for reading/writing messages
+
+Use `tcp-server` to start a TCP server with given handler:
+
+```clojure
+(tcp-server port handler)
+```
+
+## Echo Server Example
+
+```clojure
+(require '[netty-chan.core :refer :all])
+(require '[clojure.core.async :refer [go-loop >! <!]])
+
+(defn echo-handler
+  [ctx ch]
+  (go-loop [msg (<! ch)]
+    (>! ch msg)
+    (recur (<! ch))))
+
+(defn start-server
+  []
+  (tcp-server 9998 echo-handler))
+```
+
+Call `start-server` in a REPL and use telnet to test:
+
+```
+[jerry:~/dev/personal/netty-chan]$ telnet localhost 9998
+Trying ::1...
+Connected to jerry-laptop.
+Escape character is '^]'.
+9800
+9800
+hello
+hello
+foobar
+foobar
+你好
+你好
+```
 
 ## License
 
